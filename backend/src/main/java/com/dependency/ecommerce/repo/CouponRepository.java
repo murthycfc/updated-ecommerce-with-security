@@ -19,7 +19,7 @@ public interface CouponRepository extends JpaRepository<Coupon, UUID> {
     @Query(value = "select * from coupons where id =:id and is_deleted=false and start_date<=now() and now()<=end_date", nativeQuery = true)
     Optional<Coupon> isValidCoupon(String id);
 
-    @Query(value = "select * from coupons where is_deleted=false", nativeQuery = true)
+    @Query(value = "select * from coupons where is_deleted=false and start_date<=now() and now()<=end_date", nativeQuery = true)
     List<Coupon> fetchAllCoupons();
 
     @Query(value = "select * from coupons where id =:id", nativeQuery = true)

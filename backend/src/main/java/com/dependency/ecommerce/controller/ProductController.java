@@ -26,11 +26,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> getAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size){
+    public ResponseEntity<List<ProductResponse>> getAllProducts(){
 
-        return ResponseEntity.ok(productFacade.getAllProducts(page, size));
+        return ResponseEntity.ok(productFacade.getAllProducts());
     }
 
     @GetMapping("/{id}")

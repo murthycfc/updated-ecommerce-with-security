@@ -18,9 +18,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     Optional<Product> findById(@Param("id") String id);
 
     @Query(value = "select * from products where is_deleted = false",
-            countQuery = "select count(*) from products where is_deleted = false",
             nativeQuery = true)
-    Page<Product> findByIsDeletedFalse(Pageable pageable);
+    List<Product> findByIsDeletedFalse();
 
     @Query(value = "select * from products where id = :id and is_deleted = false", nativeQuery = true)
     Optional<Product> findByIdAndIsDeletedFalseQuery(@Param("id") String id);

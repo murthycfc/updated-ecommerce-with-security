@@ -46,17 +46,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductResponse> getAllProducts(int page, int size) {
+    public List<ProductResponse> getAllProducts() {
         try {
+            List<Product> products = productRepo.findByIsDeletedFalse();
 
-            Pageable pageable = PageRequest.of(page, size);
-            Page<Product> products = productRepo.findByIsDeletedFalse(pageable);
-
-            return products.map(product -> {
+            List<ProductResponse> productResponses = new ArrayList<>();
+            for (Product product : products) {
                 ProductResponse response = new ProductResponse();
-                BeanUtils.copyProperties(product,response);
-                return response;
-            });
+                BeanUtils.copyProperties(product, response);
+                productResponses.add(response);
+            }
+            return productResponses;
         }
         catch (Exception  ex){
             log.error("Unexpected error while fetching products", ex);

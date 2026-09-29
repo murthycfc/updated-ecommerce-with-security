@@ -58,8 +58,9 @@ loginForm.addEventListener("submit", async function(event) {
         const data = response.data;
 
         localStorage.setItem("loggedInUser",JSON.stringify(data));
+        localStorage.setItem("token", data.token);
 
-         document.getElementById("message").innerHTML = `
+        document.getElementById("message").innerHTML = `
             <div class="alert alert-success">
                 ${data.message}
             </div>

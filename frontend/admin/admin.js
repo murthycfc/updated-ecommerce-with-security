@@ -55,7 +55,7 @@ async function loadProducts() {
     try {
         const response = await getAllProducts();
         
-        const products = await response.data;
+        const products =  response.data;
         tableBody.innerHTML="";
         products.forEach(function(product){
             tableBody.innerHTML+= `

@@ -11,7 +11,7 @@ if(!loggedInUser){
 
 document.getElementById("logoutBtn").addEventListener("click", function(){
     localStorage.clear();
-    window.location.href="http://localhost/login.html"
+    window.location.href="http://localhost/frontend/login.html"
 });
 
 const productContainer = document.getElementById("productContainer");

@@ -12,5 +12,4 @@ public class EcommerceApplication {
         SpringApplication.run(EcommerceApplication.class, args);
         System.out.println("Application started");
     }
-
 }

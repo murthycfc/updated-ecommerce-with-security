@@ -4,9 +4,14 @@ import com.dependency.ecommerce.dto.*;
 import com.dependency.ecommerce.exception.*;
 import com.dependency.ecommerce.model.User;
 import com.dependency.ecommerce.repo.UserRepository;
+import com.dependency.ecommerce.security.JwtService;
 import com.dependency.ecommerce.service.api.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +23,14 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    AuthServiceImpl(UserRepository userRepo, PasswordEncoder passwordEncoder){
+    AuthServiceImpl(UserRepository userRepo, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService){
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -68,13 +77,22 @@ public class AuthServiceImpl implements AuthService {
                 throw new UserInactiveException("User account is inactive");
             }
 
-            boolean passwordMatches = passwordEncoder.matches(request.getPassword(), user.getPassword());
-            if(!passwordMatches){
-                log.error("Login failed: invalid password for email {}", request.getEmail());
-                throw new InvalidCredentialsException("Invalid email or password");
-            }
+//            boolean passwordMatches = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+//            if(!passwordMatches){
+//                log.error("Login failed: invalid password for email {}", request.getEmail());
+//                throw new InvalidCredentialsException("Invalid email or password");
+//            }
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String token = jwtService.generateToken(userDetails);
+
             LoginResponse response = new LoginResponse();
             BeanUtils.copyProperties(user, response);
+            response.setToken(token);
             response.setMessage("Login Success");
             response.setUserId(user.getId());
             return response;

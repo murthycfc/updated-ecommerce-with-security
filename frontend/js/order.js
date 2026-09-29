@@ -158,7 +158,18 @@ window.increaseQuantity = async function (productId) {
 
 window.decreaseQuantity = async function (productId) {
     try {
-        await decrementQuantity(loggedInUser.userId, productId);
+
+        const cartItem = cart?.cartItems?.find(function(item){
+            return item.product.id === productId;
+        })
+        if(!cartItem){
+            return;
+        }
+        if(cartItem.quantity<=1){
+            await removeCartItem(loggedInUser.userId, productId);
+        }else{
+            await decrementQuantity(loggedInUser.userId, productId);
+        }
         await loadCart();
         appliedCoupon=null;
         orderDiscountAmount.textContent=`₹${0}`

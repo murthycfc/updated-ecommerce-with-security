@@ -36,8 +36,8 @@ public class ProductFacadeImpl implements ProductFacade {
     }
 
     @Override
-    public Page<ProductResponse> getAllProducts(int page, int size) {
-        return productService.getAllProducts(page, size);
+    public List<ProductResponse> getAllProducts() {
+        return productService.getAllProducts();
     }
 
     @Override
